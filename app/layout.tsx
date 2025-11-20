@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto_Flex } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import Header from "@/components/Header/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -9,6 +11,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const robotoFlex = Roboto_Flex({
+  variable: "--font-roboto-flex",
   subsets: ["latin"],
 });
 
@@ -23,11 +30,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${robotoFlex.variable} overflow-x-hidden bg-black antialiased`}
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <div className="fixed inset-0 z-0">
+            <div className="absolute top-0 right-0 left-0 h-4 bg-black bg-[linear-gradient(45deg,rgba(16,16,16,0.1)_1px,transparent_1px),linear-gradient(-45deg,rgba(16,16,16,0.1)_1px,transparent_1px),linear-gradient(rgba(8,8,8,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(8,8,8,0.05)_1px,transparent_1px)] bg-size-[6px_6px,6px_6px,12px_12px,12px_12px]"></div>
+            <div className="absolute top-0 bottom-0 left-0 w-8 bg-black bg-[linear-gradient(45deg,rgba(16,16,16,0.1)_1px,transparent_1px),linear-gradient(-45deg,rgba(16,16,16,0.1)_1px,transparent_1px),linear-gradient(rgba(8,8,8,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(8,8,8,0.05)_1px,transparent_1px)] bg-size-[6px_6px,6px_6px,12px_12px,12px_12px]"></div>
+            <div className="absolute top-0 right-0 bottom-0 w-8 bg-black bg-[linear-gradient(45deg,rgba(16,16,16,0.1)_1px,transparent_1px),linear-gradient(-45deg,rgba(16,16,16,0.1)_1px,transparent_1px),linear-gradient(rgba(8,8,8,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(8,8,8,0.05)_1px,transparent_1px)] bg-size-[6px_6px,6px_6px,12px_12px,12px_12px]"></div>
+          </div>
+
+          <Header />
+          <main className="relative z-10 flex flex-col items-center">
+            {/* Content */}
+            <div className="w-full px-0 pt-0 md:px-8 md:pt-8"> {children}</div>
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
