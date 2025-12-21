@@ -1,6 +1,7 @@
 import React from "react";
 import HeroSlider from "./HeroSlider";
 import Image from "next/image";
+import Link from "next/link";
 
 const HeroItems = ["Solutions", "Designs", "Software", "Platforms"];
 const Stack = ["GIS", "Python", "Golang", ""];
@@ -39,13 +40,17 @@ const Hero = () => {
         </p>
       </div>
 
-      <div className="flex w-full flex-row space-x-8">
-        <div className="flex h-10 w-fit items-center justify-center bg-rose-600 px-8 py-2">
-          <p className="text-md font-medium text-neutral-50">Get Started</p>
-        </div>
-        <div className="flex h-[35px] w-fit items-center justify-center border-b-[0.5px] border-neutral-600 px-4 py-2">
-          <p className="text-md font-medium text-neutral-50">Contact us</p>
-        </div>
+      <div className="flex w-full flex-row gap-4 md:gap-8">
+        <Link href="/e-rates">
+          <div className="flex h-10 w-fit cursor-pointer items-center justify-center bg-rose-600 px-6 py-2 transition-colors hover:bg-rose-700 md:px-8">
+            <p className="text-sm font-medium text-neutral-50 md:text-base">Get Started</p>
+          </div>
+        </Link>
+        <Link href="/contact">
+          <div className="flex h-10 w-fit cursor-pointer items-center justify-center border-b-[0.5px] border-neutral-600 px-4 py-2 transition-colors hover:border-rose-600 md:px-6">
+            <p className="text-sm font-medium text-neutral-50 md:text-base">Contact us</p>
+          </div>
+        </Link>
       </div>
     </div>
   );
