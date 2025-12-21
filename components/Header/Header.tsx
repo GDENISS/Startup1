@@ -129,6 +129,11 @@ const Header = () => {
                   className="text-muted-light hover:text-accent flex items-center gap-2 text-lg font-extralight tracking-tight transition-colors"
                 >
                   {item.label}
+                  {item.badge && (
+                    <span className="rounded-full bg-rose-600 px-2 py-0.5 text-xs font-medium text-white">
+                      {item.badge}
+                    </span>
+                  )}
                 </a>
               ))}
             </div>
