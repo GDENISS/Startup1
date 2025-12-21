@@ -9,11 +9,7 @@ const ComingSoonPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-<<<<<<< HEAD
-
-=======
   // Launch date - adjust this to your actual launch date
->>>>>>> version2
   const launchDate = new Date("2026-02-01T00:00:00");
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -80,11 +76,7 @@ const ComingSoonPage = () => {
               E-Rates
             </h1>
             <p className="text-muted-foreground mt-4 text-lg">
-<<<<<<< HEAD
-              Smart rates, Smart people, Smart goverment
-=======
               Smart rate calculations at your fingertips
->>>>>>> version2
             </p>
           </div>
 
