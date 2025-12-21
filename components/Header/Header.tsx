@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { menuItems } from "@/data/headerData";
 import { gsap } from "gsap";
 import Logo from "@/components/Logo/Logo";
+import Link from "next/link";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -102,11 +103,13 @@ const Header = () => {
         <Logo />
 
         {/* CTA */}
-        <div className="squircle-sm h-fill bg-primary w-fit px-2 py-2">
-          <p className="text-primary-foreground text-[12px] font-medium tracking-wide">
-            Contact Us
-          </p>
-        </div>
+        <Link href="/contact">
+          <div className="squircle-sm h-fill bg-primary w-fit px-2 py-2 cursor-pointer hover:bg-rose-700 transition-colors">
+            <p className="text-primary-foreground text-[12px] font-medium tracking-wide">
+              Contact Us
+            </p>
+          </div>
+        </Link>
       </div>
 
       {isMenuOpen && (

@@ -1,8 +1,8 @@
 export const menuItems = {
   products: [
-    { label: "Home", href: "/Home" },
+    { label: "Home", href: "/" },
     { label: "Founders", href: "/founders" },
-    { label: "FAQ", href: "/" },
+    { label: "FAQ", href: "/FAQ" },
   ],
   // explore: [
   //   { label: "Showcase", href: "/" },

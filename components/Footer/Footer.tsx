@@ -1,12 +1,13 @@
 import React from "react";
+import Link from "next/link";
 
 const Footer = () => {
   const footerLinks = [
-    { label: "About", href: "#" },
-    { label: "Contact", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "Founders", href: "#" },
-    { label: "Terms", href: "#" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+    { label: "Blog", href: "/blog" },
+    { label: "Founders", href: "/founders" },
+    { label: "Terms", href: "/terms" },
   ];
 
   return (
@@ -14,19 +15,19 @@ const Footer = () => {
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8">
           {footerLinks.map((link, index) => (
-            <a
+            <Link
               key={index}
               href={link.href}
               className="text-sm text-neutral-500 transition-colors hover:text-white"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
         <div className="mt-4 text-center">
           <span className="text-xs text-neutral-600">
-            © 2025 Reli Light. All rights reserved.
+            © 2025 Akoot.tech All rights reserved.
           </span>
         </div>
       </div>

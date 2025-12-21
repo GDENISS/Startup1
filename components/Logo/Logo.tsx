@@ -45,6 +45,7 @@ const RailTrackIcon = () => (
       strokeLinecap="square"
     />
   </svg>
+
 );
 
 const Logo = () => {
@@ -52,13 +53,13 @@ const Logo = () => {
     <div className="flex items-center justify-center">
       <Link href={"/"}>
         <h1 className="text-muted-light flex items-center gap-2 text-[16px] font-medium">
-          <span className="font-serif italic opacity-80">Reli</span>
+          <span className="font-serif italic opacity-80">Akoot</span>
 
           <div className="text-muted-light flex items-center px-1 opacity-60">
             <RailTrackIcon />
           </div>
 
-          <span className="font-serif italic opacity-80">Light</span>
+          <span className="font-serif italic opacity-80">tech</span>
         </h1>
       </Link>
     </div>
