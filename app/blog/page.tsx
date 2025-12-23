@@ -29,14 +29,10 @@ const BlogPage = () => {
     "All",
     "Technology",
     "Development",
-    "Web Development",
-    "Mobile Development",
     "Design",
-    "AI & ML",
-    "GIS",
-    "DevOps",
-    "Tutorials",
-    "Case Studies",
+    "Tutorial",
+    "News",
+    "Company",
   ];
 
   useEffect(() => {

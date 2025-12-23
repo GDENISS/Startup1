@@ -219,19 +219,10 @@ export default function CreateBlogPage() {
                 <option value="">Select a category</option>
                 <option value="Technology">Technology</option>
                 <option value="Development">Development</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Mobile Development">Mobile Development</option>
                 <option value="Design">Design</option>
-                <option value="AI & ML">AI & ML</option>
-                <option value="GIS">GIS</option>
-                <option value="DevOps">DevOps</option>
-                <option value="Industry Insights">Industry Insights</option>
-                <option value="Tutorials">Tutorials</option>
-                <option value="Best Practices">Best Practices</option>
-                <option value="Case Studies">Case Studies</option>
-                <option value="Process">Process</option>
-                <option value="Company">Company</option>
+                <option value="Tutorial">Tutorial</option>
                 <option value="News">News</option>
+                <option value="Company">Company</option>
               </select>
             </div>
 
