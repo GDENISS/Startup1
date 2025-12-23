@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Footer from "@/components/Footer/Footer";
+import { contactApi, handleApiError } from "@/lib/api";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -12,17 +13,23 @@ const ContactPage = () => {
   });
 
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
+    setErrorMessage("");
     
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      const response = await contactApi.submit(formData);
       setStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" });
-      setTimeout(() => setStatus("idle"), 3000);
-    }, 1000);
+      setTimeout(() => setStatus("idle"), 5000);
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage(handleApiError(error));
+      setTimeout(() => setStatus("idle"), 5000);
+    }
   };
 
   const handleChange = (
@@ -142,6 +149,12 @@ const ContactPage = () => {
                 {status === "success" && (
                   <div className="rounded-lg border border-green-800 bg-green-950/50 px-4 py-3 text-green-400">
                     Message sent successfully! We'll get back to you soon.
+                  </div>
+                )}
+                
+                {status === "error" && (
+                  <div className="rounded-lg border border-red-800 bg-red-950/50 px-4 py-3 text-red-400">
+                    {errorMessage || "Failed to send message. Please try again."}
                   </div>
                 )}
               </form>

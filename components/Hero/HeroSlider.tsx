@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 interface HeroSliderProps {
@@ -9,9 +9,12 @@ interface HeroSliderProps {
 
 const HeroSlider: React.FC<HeroSliderProps> = ({ items }) => {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const itemsWithClone = [...items, items[0]];
 
   useLayoutEffect(() => {
+    setMounted(true);
+    
     const ctx = gsap.context(() => {
       const slider = sliderRef.current;
       if (!slider) return;
@@ -39,6 +42,16 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ items }) => {
 
     return () => ctx.revert();
   }, [itemsWithClone]);
+
+  if (!mounted) {
+    return (
+      <div className="relative grid overflow-hidden text-5xl text-rose-600">
+        <div className="py-2 whitespace-nowrap md:pl-2">
+          {items[0]}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

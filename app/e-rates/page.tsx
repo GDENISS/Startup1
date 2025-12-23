@@ -3,14 +3,17 @@
 import React, { useState, useEffect } from "react";
 import Footer from "@/components/Footer/Footer";
 import { Zap, Target, Settings } from "lucide-react";
+import { subscriptionApi, handleApiError } from "@/lib/api";
 
 const ComingSoonPage = () => {
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState(() => new Date());
   const [email, setEmail] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [subscribeMessage, setSubscribeMessage] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
   // Launch date - adjust this to your actual launch date
-  const launchDate = new Date("2026-02-01T00:00:00");
+  const launchDate = React.useMemo(() => new Date("2026-02-01T00:00:00"), []);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -19,14 +22,22 @@ const ComingSoonPage = () => {
   });
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+    
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isClient]);
 
   useEffect(() => {
+    if (!isClient) return;
+    
     const countdown = setInterval(() => {
       const now = new Date().getTime();
       const distance = launchDate.getTime() - now;
@@ -45,13 +56,29 @@ const ComingSoonPage = () => {
     }, 1000);
 
     return () => clearInterval(countdown);
-  }, []);
+  }, [launchDate, isClient]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setEmail("");
-    setTimeout(() => setIsSubmitted(false), 3000);
+    setSubscribeStatus("sending");
+    setSubscribeMessage("");
+    
+    try {
+      await subscriptionApi.subscribe(email, "e-rates");
+      setSubscribeStatus("success");
+      setSubscribeMessage("Thanks! We'll notify you when we launch.");
+      setEmail("");
+      setTimeout(() => {
+        setSubscribeStatus("idle");
+        setSubscribeMessage("");
+      }, 5000);
+    } catch (err) {
+      setSubscribeStatus("error");
+      setSubscribeMessage(handleApiError(err));
+      setTimeout(() => {
+        setSubscribeStatus("idle");
+      }, 5000);
+    }
   };
 
   // Calculate clock hand angles
@@ -62,6 +89,10 @@ const ComingSoonPage = () => {
   const secondAngle = (seconds * 6) - 90; // 6 degrees per second
   const minuteAngle = (minutes * 6 + seconds * 0.1) - 90; // 6 degrees per minute
   const hourAngle = (hours * 30 + minutes * 0.5) - 90; // 30 degrees per hour
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <>
@@ -76,7 +107,7 @@ const ComingSoonPage = () => {
               E-Rates
             </h1>
             <p className="text-muted-foreground mt-4 text-lg">
-              Smart rate calculations at your fingertips
+              Smarter Property Rates for Everyone
             </p>
           </div>
 
@@ -212,10 +243,7 @@ const ComingSoonPage = () => {
               What is E-Rates?
             </h3>
             <p className="text-muted-foreground mb-4 leading-relaxed">
-              E-Rates is an intelligent rate calculation platform designed to
-              streamline pricing, quotations, and cost analysis for businesses
-              of all sizes. Say goodbye to manual calculations and hello to
-              automated, accurate, and instant rate management.
+             e-Rates is a geospatial digital system that modernizes how government property rates are managed and collected. By linking property records to accurate maps and real-time data, it makes rates transparent, fair, and easy to manage. For government, it improves valuation accuracy, boosts revenue collection, and reduces leakages. For citizens, it simplifies billing, payments, and inquiries cutting delays, confusion, and unnecessary trips to offices. The result is a more efficient, accountable, and people-friendly rates system.
             </p>
             <div className="mt-8 grid gap-4 text-left md:grid-cols-3">
               <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-4">
@@ -262,13 +290,19 @@ const ComingSoonPage = () => {
                 />
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-rose-600 px-6 py-3 font-medium text-white transition-colors hover:bg-rose-700"
+                  className="w-full rounded-lg bg-rose-600 px-6 py-3 font-medium text-white transition-colors hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={subscribeStatus === "sending"}
                 >
-                  Notify Me
+                  {subscribeStatus === "sending" ? "Subscribing..." : "Notify Me"}
                 </button>
-                {isSubmitted && (
+                {subscribeStatus === "success" && subscribeMessage && (
                   <div className="rounded-lg border border-green-800 bg-green-950/50 px-4 py-3 text-center text-sm text-green-400">
-                    Thanks! We'll notify you when we launch.
+                    {subscribeMessage}
+                  </div>
+                )}
+                {subscribeStatus === "error" && subscribeMessage && (
+                  <div className="rounded-lg border border-red-800 bg-red-950/50 px-4 py-3 text-center text-sm text-red-400">
+                    {subscribeMessage}
                   </div>
                 )}
               </form>
@@ -281,7 +315,7 @@ const ComingSoonPage = () => {
               Follow Our Progress
             </h3>
             <p className="text-muted-foreground mb-6">
-              Want to see what we're building? Check out our blog for updates
+              Want to see what we&apos;re building? Check out our blog for updates
             </p>
             <a
               href="/blog"

@@ -14,11 +14,11 @@ import Image from "next/image";
 
 // 1. The Content Data
 const foundersData = {
-  githinji: `Dennis Githinji is a Co-Founder of Reli Light and a Geomatic Engineer from Dedan Kimathi University of Technology (DeKUT). Writing code since his first year, Dennis blends technical engineering with software development.
+  githinji: `Dennis Githinji is a Co-Founder of Akoot.tech and a Geomatic Engineer from Dedan Kimathi University of Technology (DeKUT). Writing code since his first year, Dennis blends technical engineering with software development.
 
-  His path to founding Reli Light began during a government internship where he watched valuable geospatial data sit unused in static reports. He realized that without intuitive tools, critical infrastructure data was useless to decision-makers. Driven by this gap, he co-founded Reli Light to build accessible, ML-powered software that allows local and national governments to visualize their challenges clearly and solve them efficiently.`,
+  His path to founding Akoot.tech began during a government internship where he watched valuable geospatial data sit unused in static reports. He realized that without intuitive tools, critical infrastructure data was useless to decision-makers. Driven by this gap, he co-founded Reli Light to build accessible, ML-powered software that allows local and national governments to visualize their challenges clearly and solve them efficiently.`,
 
-  kareu: `Mike Kareu is a Co-Founder of Reli Light and a Geomatic Engineer from Dedan Kimathi University of Technology (DeKUT). An expert developer since his freshman year, Mike specializes in high-performance GIS architecture.
+  kareu: `Mike Kareu is a Co-Founder of Akoot.tech and a Geomatic Engineer from Dedan Kimathi University of Technology (DeKUT). An expert developer since his freshman year, Mike specializes in high-performance GIS architecture.
 
   His inspiration for the startup emerged while analyzing logistics for local businesses. He noticed that companies were bleeding resources simply because they couldn't leverage the spatial data that big tech companies take for granted. Refusing to accept this disparity, Mike co-founded Reli Light to engineer robust, scalable systems that democratize spatial intelligence, ensuring Kenyan businesses have the precise tools they need to thrive in a digital economy.`,
 };
