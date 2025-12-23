@@ -30,10 +30,19 @@ export const metadata: Metadata = {
   authors: [{ name: "Akoot.tech" }],
   creator: "Akoot.tech",
   publisher: "Akoot.tech",
+  applicationName: "Akoot.tech",
+  category: "Technology",
+  classification: "Software Development Company",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
+  },
+  alternates: {
+    canonical: "https://akoot.tech",
+  },
+  verification: {
+    google: "google-site-verification-code",
   },
   openGraph: {
     type: "website",
@@ -75,8 +84,38 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Akoot.tech',
+    url: 'https://akoot.tech',
+    logo: 'https://akoot.tech/logo.png',
+    description: 'Akoot.tech crafts intuitive digital platforms including web applications, mobile solutions, GIS systems, and custom software for startups, businesses, and government agencies in Kenya and beyond.',
+    sameAs: [
+      'https://twitter.com/akoottech',
+      'https://linkedin.com/company/akoottech',
+      'https://github.com/akoottech'
+    ],
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'KE',
+      addressLocality: 'Nairobi'
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Support',
+      url: 'https://akoot.tech/contact'
+    }
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${robotoFlex.variable} overflow-x-hidden bg-black antialiased`}
         suppressHydrationWarning

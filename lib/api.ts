@@ -55,7 +55,8 @@ export interface SubscriptionData {
 // Generic API fetch wrapper
 async function apiFetch<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retries = 2
 ): Promise<ApiResponse<T>> {
   const url = `${API_BASE_URL}${endpoint}`;
   
@@ -65,7 +66,7 @@ async function apiFetch<T>(
       'Content-Type': 'application/json',
       ...options.headers,
     },
-    signal: AbortSignal.timeout(30000), // 30 second timeout
+    signal: AbortSignal.timeout(60000), // 60 second timeout for cold starts
   };
 
   console.log('API Request:', { url, method: config.method || 'GET' });
@@ -117,9 +118,14 @@ async function apiFetch<T>(
     console.log('API Response Data:', data);
     return data;
   } catch (error) {
+    if (error instanceof Error && error.name === 'TimeoutError' && retries > 0) {
+      console.warn(`Request timed out. Retrying... (${retries} attempts left)`);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return apiFetch<T>(endpoint, options, retries - 1);
+    }
     if (error instanceof Error && error.name === 'TimeoutError') {
       console.error('API Timeout:', url);
-      throw new Error('Request timed out. Please check your connection.');
+      throw new Error('Server is starting up (cold start). Please wait a moment and try again.');
     }
     console.error('API Error:', error);
     throw error;

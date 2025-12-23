@@ -23,6 +23,21 @@ const BlogPage = () => {
   const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [subscribeMessage, setSubscribeMessage] = useState("");
   const [expandedBlogId, setExpandedBlogId] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  const categories = [
+    "All",
+    "Technology",
+    "Development",
+    "Web Development",
+    "Mobile Development",
+    "Design",
+    "AI & ML",
+    "GIS",
+    "DevOps",
+    "Tutorials",
+    "Case Studies",
+  ];
 
   useEffect(() => {
     setIsClient(true);
@@ -85,6 +100,10 @@ const BlogPage = () => {
     setExpandedBlogId(expandedBlogId === blogId ? null : blogId);
   };
 
+  const filteredBlogs = selectedCategory === "all" 
+    ? blogs 
+    : blogs?.filter(blog => blog.category?.toLowerCase() === selectedCategory.toLowerCase());
+
   if (!isClient) {
     return null;
   }
@@ -104,6 +123,23 @@ const BlogPage = () => {
             <p className="mt-4 text-lg text-neutral-400">
               Thoughts on technology, development, and building better software.
             </p>
+            
+            {/* Category Filter */}
+            <div className="mt-8 flex flex-wrap gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat.toLowerCase())}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                    selectedCategory === cat.toLowerCase()
+                      ? "bg-rose-600 text-white"
+                      : "border border-neutral-800 bg-neutral-950 text-neutral-400 hover:border-rose-600 hover:text-white"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Blog Grid */}
@@ -128,13 +164,17 @@ const BlogPage = () => {
                 Try Again
               </button>
             </div>
-          ) : !blogs || blogs?.length === 0 ? (
+          ) : !filteredBlogs || filteredBlogs?.length === 0 ? (
             <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-8 text-center">
-              <p className="text-neutral-400">No blog posts yet. Check back soon!</p>
+              <p className="text-neutral-400">
+                {selectedCategory === "all" 
+                  ? "No blog posts yet. Check back soon!" 
+                  : `No posts found in "${selectedCategory}" category.`}
+              </p>
             </div>
           ) : (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {blogs?.map((post) => {
+              {filteredBlogs?.map((post) => {
                 const isExpanded = expandedBlogId === post._id;
                 return (
                   <article
@@ -195,7 +235,7 @@ const BlogPage = () => {
           )}
 
           {/* Load More */}
-          {!loading && !error && blogs?.length > 0 && (
+          {!loading && !error && filteredBlogs?.length > 0 && (
             <div className="mt-12 text-center">
               <button className="rounded-lg border border-neutral-800 bg-neutral-950 px-8 py-3 font-medium text-white transition-colors hover:border-rose-600 hover:bg-neutral-900">
                 Load More Posts
