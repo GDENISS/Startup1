@@ -65,10 +65,15 @@ async function apiFetch<T>(
       'Content-Type': 'application/json',
       ...options.headers,
     },
+    signal: AbortSignal.timeout(30000), // 30 second timeout
   };
+
+  console.log('API Request:', { url, method: config.method || 'GET' });
 
   try {
     const response = await fetch(url, config);
+    
+    console.log('API Response Status:', response.status);
     
     // Check content type to ensure it's JSON
     const contentType = response.headers.get('content-type');
@@ -109,8 +114,13 @@ async function apiFetch<T>(
     }
     
     const data = await response.json();
+    console.log('API Response Data:', data);
     return data;
   } catch (error) {
+    if (error instanceof Error && error.name === 'TimeoutError') {
+      console.error('API Timeout:', url);
+      throw new Error('Request timed out. Please check your connection.');
+    }
     console.error('API Error:', error);
     throw error;
   }
