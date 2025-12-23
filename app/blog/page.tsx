@@ -44,10 +44,8 @@ const BlogPage = () => {
         // Handle different response structures
         if (Array.isArray(response.data)) {
           setBlogs(response.data);
-        } else if (response.data && Array.isArray(response.data.data)) {
+        } else if (response.data && 'data' in response.data && Array.isArray(response.data.data)) {
           setBlogs(response.data.data);
-        } else if (response.data) {
-          setBlogs([response.data]);
         } else {
           setBlogs([]);
         }
