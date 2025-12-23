@@ -64,7 +64,7 @@ const ComingSoonPage = () => {
     setSubscribeMessage("");
     
     try {
-      await subscriptionApi.subscribe(email, "waitlist");
+      await subscriptionApi.subscribe(email, "landing_page");
       setSubscribeStatus("success");
       setSubscribeMessage("Thanks! We'll notify you when we launch.");
       setEmail("");
