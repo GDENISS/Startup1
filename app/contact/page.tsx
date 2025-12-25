@@ -170,7 +170,7 @@ const ContactPage = () => {
                   href="mailto:hello@akoot.tech"
                   className="text-neutral-400 transition-colors hover:text-rose-500"
                 >
-                  hello@akoot.tech
+                  info@akoot.tech
                 </a>
               </div>
 

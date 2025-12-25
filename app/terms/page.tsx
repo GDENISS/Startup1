@@ -266,7 +266,7 @@ const TermsPage = () => {
                     href="mailto:legal@akoot.tech"
                     className="text-rose-500 hover:text-rose-400"
                   >
-                    legal@akoot.tech
+                    info@akoot.tech
                   </a>
                 </p>
                 <p className="mt-2 text-white">
