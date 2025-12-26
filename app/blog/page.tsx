@@ -28,11 +28,11 @@ const BlogPage = () => {
   const categories = [
     "All",
     "Technology",
+    "Business",
+    "Startup",
     "Development",
     "Design",
-    "Tutorial",
-    "News",
-    "Company",
+    "Marketing",
   ];
 
   useEffect(() => {
