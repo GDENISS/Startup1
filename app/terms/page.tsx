@@ -1,4 +1,18 @@
-"use client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service - Legal Information",
+  description: "Read Akoot.tech's Terms of Service outlining our service agreements, project engagement terms, intellectual property rights, and legal obligations. Last updated December 21, 2025.",
+  openGraph: {
+    title: "Terms of Service - Akoot.tech",
+    description: "Our terms of service and legal agreements for using Akoot.tech services.",
+    url: "https://akoot.tech/terms",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 import React from "react";
 import Footer from "@/components/Footer/Footer";
@@ -263,7 +277,7 @@ const TermsPage = () => {
                 <p className="text-white">
                   <strong>Email:</strong>{" "}
                   <a
-                    href="mailto:legal@akoot.tech"
+                    href="mailto:info@akoot.tech"
                     className="text-rose-500 hover:text-rose-400"
                   >
                     info@akoot.tech

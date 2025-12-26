@@ -1,4 +1,15 @@
-"use client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog - Insights & Updates from Akoot.tech",
+  description: "Explore articles on technology, development, design, and digital solutions from the Akoot.tech team. Stay updated with the latest in web development, GIS, and software engineering.",
+  openGraph: {
+    title: "Akoot.tech Blog - Tech Insights & Updates",
+    description: "Explore our latest articles on technology, development, and digital solutions.",
+    url: "https://akoot.tech/blog",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630, alt: "Akoot.tech Blog" }],
+  },
+};
 
 import React, { useState, useEffect } from "react";
 import Footer from "@/components/Footer/Footer";

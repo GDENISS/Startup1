@@ -1,4 +1,15 @@
-"use client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Us - Building Solutions That Matter",
+  description: "Learn about Akoot.tech's mission to transform ideas into powerful digital platforms. Founded by Geomatic Engineers from DeKUT, we craft intuitive solutions for startups, businesses, and government agencies.",
+  openGraph: {
+    title: "About Akoot.tech - Building Solutions That Matter",
+    description: "Transforming ideas into powerful digital platforms. Learn about our story, mission, and expertise.",
+    url: "https://akoot.tech/about",
+    images: [{ url: "/og-about.png", width: 1200, height: 630, alt: "About Akoot.tech" }],
+  },
+};
 
 import React from "react";
 import Footer from "@/components/Footer/Footer";

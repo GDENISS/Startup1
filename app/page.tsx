@@ -1,4 +1,15 @@
-"use client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Akoot.tech | Building Digital Platforms That Solve Real Problems",
+  description: "Akoot.tech crafts intuitive digital platforms including web applications, mobile solutions, GIS systems, and custom software for startups, businesses, and government agencies in Kenya and beyond.",
+  openGraph: {
+    title: "Akoot.tech | Building Digital Platforms That Solve Real Problems",
+    description: "Crafting intuitive digital platforms for everyday problems. Smart systems for real challenges.",
+    url: "https://akoot.tech",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Akoot.tech - Building Digital Platforms" }],
+  },
+};
 
 import Hero from "@/components/Hero/Hero";
 import Stack from "@/components/Stack/Stack";

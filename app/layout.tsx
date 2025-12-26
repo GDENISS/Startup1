@@ -42,6 +42,8 @@ export const metadata: Metadata = {
     canonical: "https://akoot.tech",
   },
   verification: {
+    // TODO: Replace with your actual Google Search Console verification code
+    // Get it from: https://search.google.com/search-console
     google: "google-site-verification-code",
   },
   openGraph: {
