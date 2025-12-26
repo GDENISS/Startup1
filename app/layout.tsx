@@ -26,6 +26,15 @@ export const metadata: Metadata = {
     template: "%s | Akoot.tech",
   },
   description: "Akoot.tech crafts intuitive digital platforms including web applications, mobile solutions, GIS systems, and custom software for startups, businesses, and government agencies in Kenya and beyond.",
+  icons: {
+    icon: [
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   keywords: ["web development", "mobile app development", "GIS solutions", "custom software", "Kenya tech", "software development Kenya", "Nairobi developers", "geospatial technology", "machine learning", "Python development", "Golang development", "Next.js development"],
   authors: [{ name: "Akoot.tech" }],
   creator: "Akoot.tech",

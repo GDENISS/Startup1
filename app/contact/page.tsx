@@ -1,15 +1,4 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Contact Us - Let's Build Something Together",
-  description: "Get in touch with Akoot.tech to discuss your project. We're here to help startups, businesses, and government agencies build digital solutions. Email: info@akoot.tech",
-  openGraph: {
-    title: "Contact Akoot.tech - Let's Build Something Together",
-    description: "Ready to start your project? Get in touch with our team today.",
-    url: "https://akoot.tech/contact",
-    images: [{ url: "/og-contact.png", width: 1200, height: 630, alt: "Contact Akoot.tech" }],
-  },
-};
+"use client";
 
 import React, { useState } from "react";
 import Footer from "@/components/Footer/Footer";
