@@ -26,7 +26,7 @@ export interface Blog {
   slug: string;
   excerpt: string;
   content: string;
-  author: string;
+  author: string | { name: string; email?: string };
   category: string;
   tags: string[];
   coverImage?: string;
