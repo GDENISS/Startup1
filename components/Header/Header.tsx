@@ -118,24 +118,38 @@ const Header = () => {
           className="flex flex-1 flex-row gap-8 px-6 py-8"
         >
           <div className="flex-1">
-            <p className="text-muted mb-4 text-xs tracking-wider uppercase">
-              OUR PRODUCTS
-            </p>
             <div className="flex flex-col gap-3">
-              {menuItems.products.map((item, index) => (
+              {menuItems.products.filter(item => item.label !== "E-Rates").map((item, index) => (
                 <a
                   key={index}
                   href={item.href}
                   className="text-muted-light hover:text-accent flex items-center gap-2 text-lg font-extralight tracking-tight transition-colors"
                 >
                   {item.label}
-                  {item.badge && (
-                    <span className="rounded-full bg-rose-600 px-2 py-0.5 text-xs font-medium text-white">
-                      {item.badge}
-                    </span>
-                  )}
                 </a>
               ))}
+              <div className="group relative">
+                <div className="flex items-center gap-2 text-lg font-extralight tracking-tight cursor-pointer select-none">
+                  OUR PRODUCTS
+                  <svg className="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                </div>
+                <div className="absolute left-0 mt-2 min-w-[140px] rounded bg-neutral-900 shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 transition-all z-20 border border-neutral-700">
+                  {menuItems.products.filter(item => item.label === "E-Rates").map((item, index) => (
+                    <a
+                      key={index}
+                      href={item.href}
+                      className="block px-4 py-2 text-muted-light hover:text-accent text-base font-extralight tracking-tight transition-colors whitespace-nowrap"
+                    >
+                      {item.label}
+                      {item.badge && (
+                        <span className="ml-2 rounded-full bg-rose-600 px-2 py-0.5 text-xs font-medium text-white">
+                          {item.badge}
+                        </span>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
