@@ -94,133 +94,53 @@ const TypewriterBlock: React.FC<TypewriterBlockProps> = ({ text }) => {
 
 const TeamPage = () => {
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
-  const [positions, setPositions] = useState(teamMembers.map(m => ({ x: m.initialX, y: m.initialY })));
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
-  const [lastDispersedTime, setLastDispersedTime] = useState(0);
-  const [isDispersing, setIsDispersing] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        setMousePos({
-          x: ((e.clientX - rect.left) / rect.width) * 100,
-          y: ((e.clientY - rect.top) / rect.height) * 100,
-        });
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    if (selectedMember !== null) return;
-
-    const interval = setInterval(() => {
-      const currentTime = Date.now();
-      
-      setPositions(prev => prev.map((pos, idx) => {
-        // Center point for clustering
-        const centerX = 50;
-        const centerY = 45;
-        
-        // Calculate distance from mouse
-        const distFromMouse = Math.sqrt(
-          Math.pow(pos.x - mousePos.x, 2) + Math.pow(pos.y - mousePos.y, 2)
-        );
-        
-        let targetX, targetY;
-        
-        // If mouse is close, disperse
-        if (distFromMouse < 20) {
-          setIsDispersing(true);
-          setLastDispersedTime(currentTime);
-          const angle = Math.atan2(pos.y - mousePos.y, pos.x - mousePos.x);
-          const disperseForce = 2;
-          targetX = pos.x + Math.cos(angle) * disperseForce;
-          targetY = pos.y + Math.sin(angle) * disperseForce;
-        } else {
-          // Check if 3 seconds have passed since last dispersion
-          const timeSinceDisperse = currentTime - lastDispersedTime;
-          
-          if (isDispersing && timeSinceDisperse < 3000) {
-            // Hold position during delay
-            targetX = pos.x;
-            targetY = pos.y;
-          } else {
-            // Resume water-like circular motion
-            if (isDispersing) setIsDispersing(false);
-            const time = Date.now() * 0.0002; // Slower motion
-            const angle = time + (idx * Math.PI * 2 / teamMembers.length);
-            const radius = 8 + Math.sin(time * 0.5 + idx) * 3; // Wave-like radius variation
-            targetX = centerX + Math.cos(angle) * radius;
-            targetY = centerY + Math.sin(angle) * radius;
-          }
-        }
-        
-        // Apply boundaries (keep within 20-80% range)
-        targetX = Math.max(20, Math.min(80, targetX));
-        targetY = Math.max(20, Math.min(70, targetY));
-        
-        // Smooth water-like movement
-        const smoothing = 0.05; // Much slower, more fluid
-        return {
-          x: pos.x + (targetX - pos.x) * smoothing,
-          y: pos.y + (targetY - pos.y) * smoothing,
-        };
-      }));
-    }, 40); // Slightly longer interval for smoother motion
-
-    return () => clearInterval(interval);
-  }, [selectedMember, mousePos, lastDispersedTime, isDispersing]);
 
   return (
     <>
+
       <div className="relative min-h-screen w-full overflow-hidden bg-black">
         <div className="relative z-10 px-4 py-16">
-          <div className="mb-12 text-center">
-            <h1 className="mb-2 font-[family-name:var(--font-geist-sans)] text-4xl font-bold text-neutral-300 md:text-5xl">
+          {/* Consistent Header with Logical Statement */}
+          <div className="mb-12 md:mb-16 flex flex-col items-start">
+            <p className="font-mono text-sm uppercase tracking-widest text-neutral-500">
+              Teamwork • Innovation • Impact
+            </p>
+            <h1 className="mt-3 text-4xl font-bold text-white md:text-5xl font-[family-name:var(--font-geist-sans)]">
               Our Team
             </h1>
-            <p className="font-[family-name:var(--font-roboto-flex)] text-neutral-500">
-              Hover to interact • Click to learn more
+            <p className="mt-4 text-neutral-400 max-w-xl font-[family-name:var(--font-roboto-flex)]">
+              Meet the people behind Akoot.tech
             </p>
           </div>
 
-          {/* Floating Team Members */}
-          <div ref={containerRef} className="relative h-[400px]">
+          {/* Team Members Grid */}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {teamMembers.map((member, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedMember(index)}
-                className="absolute transition-transform hover:scale-110"
-                style={{
-                  left: `${positions[index].x}%`,
-                  top: `${positions[index].y}%`,
-                  transform: 'translate(-50%, -50%)',
-                }}
+                className="group flex flex-col items-center rounded-2xl border border-neutral-800 bg-neutral-950/80 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:border-rose-600 hover:shadow-rose-600/20 focus:outline-none focus:ring-2 focus:ring-rose-600"
+                style={{ animation: `fadeIn 0.7s ${index * 0.1}s both` }}
               >
-                <div className="group relative">
-                  <div className="rounded-full border-2 border-rose-600/30 bg-neutral-950 p-1 transition-all hover:border-rose-600 hover:shadow-lg hover:shadow-rose-600/20">
-                    <Image
-                      src={member.avatar}
-                      alt={member.name}
-                      width={80}
-                      height={80}
-                      className="rounded-full"
-                    />
-                  </div>
-                  <div className="mt-2 text-center">
-                    <p className="font-[family-name:var(--font-geist-sans)] text-sm font-medium text-neutral-300">
-                      {member.name}
-                    </p>
-                    <p className="font-[family-name:var(--font-roboto-flex)] text-xs text-neutral-600">
-                      {member.role}
-                    </p>
-                  </div>
+                <div className="relative mb-4">
+                  <Image
+                    src={member.avatar}
+                    alt={member.name}
+                    width={80}
+                    height={80}
+                    className="rounded-full border-2 border-rose-600/30 group-hover:border-rose-600 transition-all"
+                  />
                 </div>
+                <p className="font-[family-name:var(--font-geist-sans)] text-lg font-bold text-neutral-200 mb-1">
+                  {member.name}
+                </p>
+                <p className="font-[family-name:var(--font-roboto-flex)] text-sm text-neutral-500 mb-2">
+                  {member.role}
+                </p>
+                <span className="text-xs text-neutral-400 text-center line-clamp-3">
+                  {member.bio.split(" ").slice(0, 18).join(" ")}...
+                </span>
               </button>
             ))}
           </div>
