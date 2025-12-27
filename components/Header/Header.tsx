@@ -10,6 +10,24 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
   const menuContentRef = useRef<HTMLDivElement>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // Track screen size for client-only logic
+  const [isMobile, setIsMobile] = useState(false);
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Handle dropdown toggle for mobile
+  const handleDropdownToggle = (e: React.MouseEvent) => {
+    if (isMobile) {
+      e.preventDefault();
+      setIsDropdownOpen((prev) => !prev);
+    }
+  };
+
 
   const toggleMenu = () => {
     if (!headerRef.current) return;
@@ -17,10 +35,11 @@ const Header = () => {
     if (!isMenuOpen) {
       // Open menu
       const tl = gsap.timeline();
-
+      const width = isMobile ? "95vw" : "90vw";
+      const maxWidth = isMobile ? "95vw" : "90vw";
       tl.to(headerRef.current, {
-        width: window.innerWidth < 768 ? "95vw" : "90vw",
-        maxWidth: window.innerWidth < 768 ? "95vw" : "90vw",
+        width,
+        maxWidth,
         duration: 0.8,
         ease: "power4.inOut",
       })
@@ -41,7 +60,6 @@ const Header = () => {
     } else {
       // Close menu
       const tl = gsap.timeline();
-
       if (menuContentRef.current) {
         tl.to(menuContentRef.current, {
           opacity: 0,
@@ -50,18 +68,20 @@ const Header = () => {
           ease: "power4.in",
         });
       }
-
+      const height = isMobile ? 40 : 48;
+      const width = isMobile ? "calc(100vw - 1rem)" : "600px";
+      const maxWidth = isMobile ? "95vw" : "600px";
       tl.to(
         headerRef.current,
         {
-          height: window.innerWidth < 768 ? 40 : 48,
+          height,
           duration: 0.7,
           ease: "power4.inOut",
         },
         "-=0.2"
       ).to(headerRef.current, {
-        width: window.innerWidth < 768 ? "calc(100vw - 1rem)" : "600px",
-        maxWidth: window.innerWidth < 768 ? "95vw" : "600px",
+        width,
+        maxWidth,
         duration: 0.8,
         ease: "power4.inOut",
         onComplete: () => {
@@ -128,12 +148,34 @@ const Header = () => {
                   {item.label}
                 </a>
               ))}
-              <div className="group relative">
-                <div className="flex items-center gap-2 text-lg font-extralight tracking-tight cursor-pointer select-none">
+              <div className={`group relative${isDropdownOpen ? ' open' : ''}`}>
+                <div
+                  className="flex items-center gap-2 text-lg font-extralight tracking-tight cursor-pointer select-none"
+                  onClick={handleDropdownToggle}
+                  tabIndex={0}
+                  role="button"
+                  aria-expanded={isDropdownOpen}
+                >
                   OUR PRODUCTS
-                  <svg className="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                  <svg
+                    className={`w-4 h-4 ml-1 transition-transform ${isDropdownOpen ? 'rotate-180' : ''} group-hover:rotate-180`}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
-                <div className="absolute left-0 mt-2 min-w-[140px] rounded bg-neutral-900 shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 transition-all z-20 border border-neutral-700">
+                <div
+                  className={`absolute left-0 mt-2 min-w-[140px] rounded bg-neutral-900 shadow-lg transition-all z-20 border border-neutral-700
+                    ${isDropdownOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'}
+                    group-hover:opacity-100 group-hover:translate-y-0
+                  `}
+                  style={{
+                    display: (isMobile && !isDropdownOpen) ? 'none' : undefined
+                  }}
+                >
                   {menuItems.products.filter(item => item.label === "E-Rates").map((item, index) => (
                     <a
                       key={index}

@@ -18,7 +18,7 @@ const DevelopersPage = () => {
 
           {/* Main Heading */}
           <h1 className="mb-4 text-5xl font-bold text-white md:text-7xl">
-            Developer Portal
+            Developers Portal
           </h1>
           
           <p className="mb-12 max-w-2xl text-xl text-neutral-400">

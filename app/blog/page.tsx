@@ -4,14 +4,14 @@ import React, { useState, useEffect } from "react";
 import Footer from "@/components/Footer/Footer";
 import { blogApi, subscriptionApi, handleApiError, type Blog } from "@/lib/api";
 
-// Utility to format blog dates
+// Utility to format blog dates (hydration-safe: always UTC)
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    month: 'long', 
-    day: 'numeric', 
-    year: 'numeric' 
-  });
+  // Use UTC to avoid timezone/locale mismatch
+  const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+  const day = date.toLocaleString('en-US', { day: 'numeric', timeZone: 'UTC' });
+  const year = date.toLocaleString('en-US', { year: 'numeric', timeZone: 'UTC' });
+  return `${month} ${day}, ${year}`;
 };
 
 const BlogPage = () => {
@@ -180,12 +180,16 @@ const BlogPage = () => {
                     }`}
                   >
                     <div className="p-6">
-                      {/* Category & Read Time */}
+                      {/* Category, Author & Read Time */}
                       <div className="mb-3 flex items-center justify-between text-xs">
                         <span className="font-mono uppercase tracking-wider text-rose-500">
                           {post.category || 'Uncategorized'}
                         </span>
-                        <span className="text-neutral-500">{post.readTime || '5 min read'}</span>
+                        <span className="text-neutral-500 flex items-center gap-2">
+                          {typeof post.author === 'object' && post.author !== null ? post.author.name : post.author}
+                          <span className="mx-1">·</span>
+                          {post.readTime || '5 min read'}
+                        </span>
                       </div>
 
                       {/* Title */}
