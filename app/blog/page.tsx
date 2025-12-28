@@ -110,10 +110,10 @@ const BlogPage = () => {
   const toggleBlogExpansion = (blog: Blog) => {
     if (expandedBlogId === blog._id) {
       setExpandedBlogId(null);
-      router.push('/blog', undefined, { shallow: true });
+      router.push('/blog');
     } else {
       setExpandedBlogId(blog._id);
-      router.push(`/blog/${blog.slug}`, undefined, { shallow: true });
+      router.push(`/blog/${blog.slug}`);
     }
   };
 
