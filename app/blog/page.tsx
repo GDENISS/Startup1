@@ -1,6 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Share2 } from "lucide-react";
+  // Share handler for blog posts
+  const handleShare = async (post: Blog) => {
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const url = `${baseUrl}/blog/${post.slug}`;
+    const title = post.title;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        alert('Link copied to clipboard!');
+      }
+    } catch (err) {
+      alert('Could not share the link.');
+    }
+  };
 import Footer from "@/components/Footer/Footer";
 import { blogApi, subscriptionApi, handleApiError, type Blog } from "@/lib/api";
 
@@ -189,6 +206,14 @@ const BlogPage = () => {
                           {typeof post.author === 'object' && post.author !== null ? post.author.name : post.author}
                           <span className="mx-1">·</span>
                           {post.readTime || '5 min read'}
+                          <button
+                            type="button"
+                            aria-label="Share this article"
+                            className="ml-2 p-1 rounded hover:bg-neutral-800 transition-colors"
+                            onClick={() => handleShare(post)}
+                          >
+                            <Share2 className="inline-block text-rose-500 w-4 h-4" />
+                          </button>
                         </span>
                       </div>
 
