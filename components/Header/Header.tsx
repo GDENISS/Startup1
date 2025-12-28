@@ -148,7 +148,14 @@ const Header = () => {
                   {item.label}
                 </a>
               ))}
-              <div className={`group relative${isDropdownOpen ? ' open' : ''}`}>
+              <div
+                className={`group relative${isDropdownOpen ? ' open' : ''}`}
+                onMouseEnter={() => { if (!isMobile) setIsDropdownOpen(true); }}
+                onMouseLeave={() => { if (!isMobile) setIsDropdownOpen(false); }}
+                tabIndex={0}
+                onFocus={() => { if (!isMobile) setIsDropdownOpen(true); }}
+                onBlur={() => { if (!isMobile) setIsDropdownOpen(false); }}
+              >
                 <div
                   className="flex items-center gap-2 text-lg font-extralight tracking-tight cursor-pointer select-none"
                   onClick={handleDropdownToggle}
@@ -170,11 +177,12 @@ const Header = () => {
                 <div
                   className={`absolute left-0 mt-2 min-w-[140px] rounded bg-neutral-900 shadow-lg transition-all z-20 border border-neutral-700
                     ${isDropdownOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'}
-                    group-hover:opacity-100 group-hover:translate-y-0
+                    group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0
                   `}
                   style={{
                     display: (isMobile && !isDropdownOpen) ? 'none' : undefined
                   }}
+                  tabIndex={-1}
                 >
                   {menuItems.products.filter(item => item.label === "E-Rates").map((item, index) => (
                     <a

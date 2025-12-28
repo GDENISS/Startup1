@@ -1,23 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Share2 } from "lucide-react";
-  // Share handler for blog posts
-  const handleShare = async (post: Blog) => {
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    const url = `${baseUrl}/blog/${post.slug}`;
-    const title = post.title;
-    try {
-      if (navigator.share) {
-        await navigator.share({ title, url });
-      } else {
-        await navigator.clipboard.writeText(url);
-        alert('Link copied to clipboard!');
-      }
-    } catch (err) {
-      alert('Could not share the link.');
-    }
-  };
 import Footer from "@/components/Footer/Footer";
 import { blogApi, subscriptionApi, handleApiError, type Blog } from "@/lib/api";
 
@@ -39,6 +24,8 @@ const BlogPage = () => {
   const [email, setEmail] = useState("");
   const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [subscribeMessage, setSubscribeMessage] = useState("");
+  const router = useRouter();
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const [expandedBlogId, setExpandedBlogId] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
@@ -61,6 +48,17 @@ const BlogPage = () => {
       fetchBlogs();
     }
   }, [isClient]);
+
+  // Expand blog if slug in URL
+  useEffect(() => {
+    if (!isClient) return;
+    const path = window.location.pathname;
+    const match = path.match(/^\/blog\/(.+)$/);
+    if (match && blogs.length > 0) {
+      const blog = blogs.find(b => b.slug === match[1]);
+      if (blog) setExpandedBlogId(blog._id);
+    }
+  }, [isClient, blogs]);
 
   const fetchBlogs = async () => {
     try {
@@ -109,8 +107,31 @@ const BlogPage = () => {
     }
   };
 
-  const toggleBlogExpansion = (blogId: string) => {
-    setExpandedBlogId(expandedBlogId === blogId ? null : blogId);
+  const toggleBlogExpansion = (blog: Blog) => {
+    if (expandedBlogId === blog._id) {
+      setExpandedBlogId(null);
+      router.push('/blog', undefined, { shallow: true });
+    } else {
+      setExpandedBlogId(blog._id);
+      router.push(`/blog/${blog.slug}`, undefined, { shallow: true });
+    }
+  };
+
+  // Share handler for blog posts
+  const handleShare = async (post: Blog) => {
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const url = `${baseUrl}/blog/${post.slug}`;
+    const title = post.title;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        alert('Link copied to clipboard!');
+      }
+    } catch (err) {
+      alert('Could not share the link.');
+    }
   };
 
   const filteredBlogs = selectedCategory === "all" 
@@ -246,7 +267,7 @@ const BlogPage = () => {
                       <div className="flex items-center justify-between border-t border-neutral-800 pt-4 mt-4">
                         <time className="text-xs text-neutral-500">{formatDate(post.createdAt)}</time>
                         <button
-                          onClick={() => toggleBlogExpansion(post._id)}
+                          onClick={() => toggleBlogExpansion(post)}
                           className="text-sm font-medium text-rose-500 transition-colors hover:text-rose-400 focus:outline-none"
                         >
                           {isExpanded ? '← Read less' : 'Read more →'}
