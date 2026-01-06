@@ -107,7 +107,7 @@ const BlogPage = () => {
     } catch (error) {
       // Error already logged in handleApiError
       setSubscribeStatus("error");
-      setSubscribeMessage(handleApiError(err));
+      setSubscribeMessage(handleApiError(error));
       setTimeout(() => {
         setSubscribeStatus("idle");
       }, 5000);
