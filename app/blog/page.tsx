@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Share2 } from "lucide-react";
 import Footer from "@/components/Footer/Footer";
+import { BlogCard } from "@/components/Blog/BlogCard";
 import { blogApi, subscriptionApi, handleApiError, type Blog } from "@/lib/api";
 
 // Utility to format blog dates (hydration-safe: always UTC)
@@ -24,8 +23,6 @@ const BlogPage = () => {
   const [email, setEmail] = useState("");
   const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [subscribeMessage, setSubscribeMessage] = useState("");
-  const router = useRouter();
-  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const [expandedBlogId, setExpandedBlogId] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
@@ -51,14 +48,23 @@ const BlogPage = () => {
 
   // Expand blog if slug in URL
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || blogs.length === 0) return;
     const path = window.location.pathname;
     const match = path.match(/^\/blog\/(.+)$/);
-    if (match && blogs.length > 0) {
+    if (match) {
       const blog = blogs.find(b => b.slug === match[1]);
-      if (blog) setExpandedBlogId(blog._id);
+      if (blog && expandedBlogId !== blog._id) {
+        setExpandedBlogId(blog._id);
+        // Smooth scroll to the blog after a short delay to ensure rendering
+        setTimeout(() => {
+          const element = document.getElementById(`blog-${blog._id}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
     }
-  }, [isClient, blogs]);
+  }, [isClient, blogs, expandedBlogId]);
 
   const fetchBlogs = async () => {
     try {
@@ -98,7 +104,8 @@ const BlogPage = () => {
         setSubscribeStatus("idle");
         setSubscribeMessage("");
       }, 5000);
-    } catch (err) {
+    } catch (error) {
+      // Error already logged in handleApiError
       setSubscribeStatus("error");
       setSubscribeMessage(handleApiError(err));
       setTimeout(() => {
@@ -110,10 +117,14 @@ const BlogPage = () => {
   const toggleBlogExpansion = (blog: Blog) => {
     if (expandedBlogId === blog._id) {
       setExpandedBlogId(null);
-      router.push('/blog');
+      if (typeof window !== 'undefined') {
+        window.history.pushState({}, '', '/blog');
+      }
     } else {
       setExpandedBlogId(blog._id);
-      router.push(`/blog/${blog.slug}`);
+      if (typeof window !== 'undefined') {
+        window.history.pushState({}, '', `/blog/${blog.slug}`);
+      }
     }
   };
 
@@ -208,75 +219,16 @@ const BlogPage = () => {
             </div>
           ) : (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {filteredBlogs?.map((post) => {
-                const isExpanded = expandedBlogId === post._id;
-                return (
-                  <article
-                    key={post._id}
-                    className={`group overflow-hidden rounded-lg border border-neutral-800 bg-neutral-950 transition-all hover:border-rose-600 ${
-                      isExpanded ? 'md:col-span-2 lg:col-span-3' : ''
-                    }`}
-                  >
-                    <div className="p-6">
-                      {/* Category, Author & Read Time */}
-                      <div className="mb-3 flex items-center justify-between text-xs">
-                        <span className="font-mono uppercase tracking-wider text-rose-500">
-                          {post.category || 'Uncategorized'}
-                        </span>
-                        <span className="text-neutral-500 flex items-center gap-2">
-                          {typeof post.author === 'object' && post.author !== null ? post.author.name : post.author}
-                          <span className="mx-1">·</span>
-                          {post.readTime || '5 min read'}
-                          <button
-                            type="button"
-                            aria-label="Share this article"
-                            className="ml-2 p-1 rounded hover:bg-neutral-800 transition-colors"
-                            onClick={() => handleShare(post)}
-                          >
-                            <Share2 className="inline-block text-rose-500 w-4 h-4" />
-                          </button>
-                        </span>
-                      </div>
-
-                      {/* Title */}
-                      <h2 className="mb-3 text-xl font-bold text-white transition-colors group-hover:text-rose-500">
-                        {post.title}
-                      </h2>
-
-                      {/* Content */}
-                      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                        isExpanded ? 'max-h-[10000px] opacity-100' : 'max-h-32 opacity-100'
-                      }`}>
-                        {isExpanded ? (
-                          <div className="prose prose-invert prose-rose max-w-none">
-                            <p className="text-sm text-neutral-400 leading-relaxed mb-4">
-                              {post.excerpt || (post as any).description || 'No description available.'}
-                            </p>
-                            <div className="text-sm text-neutral-300 leading-relaxed whitespace-pre-wrap">
-                              {post.content}
-                            </div>
-                          </div>
-                        ) : (
-                          <p className="text-sm text-neutral-400 leading-relaxed line-clamp-3">
-                            {post.excerpt || (post as any).description || 'No description available.'}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Footer */}
-                      <div className="flex items-center justify-between border-t border-neutral-800 pt-4 mt-4">
-                        <time className="text-xs text-neutral-500">{formatDate(post.createdAt)}</time>
-                        <button
-                          onClick={() => toggleBlogExpansion(post)}
-                          className="text-sm font-medium text-rose-500 transition-colors hover:text-rose-400 focus:outline-none"
-                        >
-                          {isExpanded ? '← Read less' : 'Read more →'}
-                        </button>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
+              {filteredBlogs?.map((post) => (
+                <BlogCard
+                  key={post._id}
+                  post={post}
+                  isExpanded={expandedBlogId === post._id}
+                  onToggle={toggleBlogExpansion}
+                  onShare={handleShare}
+                  formatDate={formatDate}
+                />
+              ))}
             </div>
           )}
 

@@ -4,9 +4,12 @@ import React, { useState } from "react";
 import { blogApi, handleApiError } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAdminAuth } from "@/lib/auth";
+import { LogOut } from "lucide-react";
 
 export default function CreateBlogPage() {
   const router = useRouter();
+  const { logout } = useAdminAuth();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -83,7 +86,7 @@ export default function CreateBlogPage() {
     <div className="min-h-screen w-full bg-black">
       <div className="mx-auto max-w-4xl px-4 py-16 md:px-8 md:py-24">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white md:text-4xl">
               Create Blog Post
@@ -92,12 +95,22 @@ export default function CreateBlogPage() {
               Admin panel - Create a new blog post
             </p>
           </div>
-          <Link
-            href="/blog"
-            className="rounded-lg border border-neutral-800 bg-neutral-950 px-4 py-2 text-white transition-colors hover:border-rose-600 hover:bg-neutral-900"
-          >
-            Back to Blog
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/blog"
+              className="rounded-lg border border-neutral-800 bg-neutral-950 px-4 py-2 text-white transition-colors hover:border-rose-600 hover:bg-neutral-900"
+            >
+              Back to Blog
+            </Link>
+            <button
+              onClick={logout}
+              className="rounded-lg border border-neutral-800 bg-neutral-950 px-4 py-2 text-white transition-colors hover:border-red-600 hover:bg-neutral-900 flex items-center gap-2"
+              aria-label="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </div>
         </div>
 
         {/* Status Messages */}

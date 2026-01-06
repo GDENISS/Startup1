@@ -221,7 +221,9 @@ const ContactPage = () => {
                     </svg>
                   </a>
                   <a
-                    href="#"
+                    href="https://x.com/AkootTech"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-neutral-400 transition-colors hover:text-rose-500"
                     aria-label="X (formerly Twitter)"
                   >

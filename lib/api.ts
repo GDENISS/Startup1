@@ -150,10 +150,17 @@ export const blogApi = {
     return apiFetch<Blog>(`/blogs/${id}`);
   },
 
-  // Like a blog post
-  likeBlog: async (id: string) => {
-    return apiFetch<{ likes: number }>(`/blogs/${id}/like`, {
-      method: 'PUT',
+  // Track blog view
+  trackView: async (slug: string) => {
+    return apiFetch<{ views: number }>(`/blogs/${slug}/view`, {
+      method: 'POST',
+    });
+  },
+
+  // Like/unlike a blog post
+  likeBlog: async (slug: string) => {
+    return apiFetch<{ likes: number }>(`/blogs/${slug}/like`, {
+      method: 'POST',
     });
   },
 
