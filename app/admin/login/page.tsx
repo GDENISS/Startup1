@@ -44,8 +44,8 @@ export default function AdminLoginPage() {
       
       // Store auth token
       if (data.token) {
-        localStorage.setItem("admin_token", data.token);
-        localStorage.setItem("admin_user", JSON.stringify(data.user));
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("auth_user", JSON.stringify(data.user));
       }
 
       // Redirect to admin dashboard
@@ -62,10 +62,10 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md">
         {/* Logo/Brand */}
         <div className="mb-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-gradient-to-br from-rose-500 to-rose-700">
-            <Lock className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mb-4 rounded-full bg-gradient-to-br from-rose-500 to-rose-700">
+            <Lock className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-white">Admin Access</h1>
+          <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">Admin Access</h1>
           <p className="mt-2 text-neutral-400">
             Sign in to manage blog posts
           </p>
