@@ -24,7 +24,8 @@ export interface Blog {
   _id: string;
   title: string;
   slug: string;
-  excerpt: string;
+  description?: string;
+  excerpt?: string;
   content: string;
   author: string | { name: string; email?: string };
   category: string;

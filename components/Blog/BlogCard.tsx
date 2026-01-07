@@ -64,7 +64,7 @@ export function BlogCard({ post, isExpanded, onToggle, onShare, formatDate }: Bl
           {isExpanded ? (
             <div className="prose prose-invert prose-rose max-w-none">
               <p className="text-sm text-neutral-400 leading-relaxed mb-4">
-                {post.excerpt || 'No description available.'}
+                {post.description || post.excerpt || post.content.substring(0, 200) + '...'}
               </p>
               <div className="text-sm text-neutral-300 leading-relaxed whitespace-pre-wrap">
                 {post.content}
@@ -72,7 +72,7 @@ export function BlogCard({ post, isExpanded, onToggle, onShare, formatDate }: Bl
             </div>
           ) : (
             <p className="text-sm text-neutral-400 leading-relaxed line-clamp-3">
-              {post.excerpt || 'No description available.'}
+              {post.description || post.excerpt || post.content.substring(0, 200) + '...'}
             </p>
           )}
         </div>
