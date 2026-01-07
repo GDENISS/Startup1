@@ -1,53 +1,50 @@
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-/**
- * Custom hook to protect admin routes
- * Redirects to login page if user is not authenticated
- */
-export function useAdminAuth() {
+export const useAdminAuth = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('admin_token');
+    if (typeof window === 'undefined') return;
+    
+    const token = localStorage.getItem('auth_token');
     
     if (!token) {
-      router.push('/admin/login');
+      router.replace('/admin/login');
     }
   }, [router]);
 
   const logout = () => {
-    localStorage.removeItem('admin_token');
-    localStorage.removeItem('admin_user');
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
     router.push('/admin/login');
   };
 
   const getUser = () => {
-    const userStr = localStorage.getItem('admin_user');
-    return userStr ? JSON.parse(userStr) : null;
+    try {
+      const userStr = localStorage.getItem('auth_user');
+      return userStr ? JSON.parse(userStr) : null;
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      return null;
+    }
   };
 
   const isAuthenticated = () => {
-    return !!localStorage.getItem('admin_token');
+    return !!localStorage.getItem('auth_token');
   };
 
   return { logout, getUser, isAuthenticated };
-}
+};
 
-/**
- * Get authentication token for API requests
- */
-export function getAuthToken(): string | null {
+export const getAuthToken = () => {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('admin_token');
-}
+  return localStorage.getItem('auth_token');
+};
 
-/**
- * Check if user is authenticated (client-side only)
- */
-export function isAuthenticated(): boolean {
+export const isAuthenticated = () => {
   if (typeof window === 'undefined') return false;
-  return !!localStorage.getItem('admin_token');
-}
+  return !!localStorage.getItem('auth_token');
+};
