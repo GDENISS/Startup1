@@ -27,7 +27,7 @@ const Footer = () => {
 
         <div className="mt-4 text-center">
           <span className="text-xs text-neutral-600">
-            © 2025 Akoot.tech All rights reserved.
+            © {new Date().getFullYear()} Akoot.tech All rights reserved.
           </span>
         </div>
       </div>

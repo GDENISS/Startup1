@@ -16,8 +16,8 @@ const Header = () => {
   React.useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Handle dropdown toggle for mobile
@@ -27,7 +27,6 @@ const Header = () => {
       setIsDropdownOpen((prev) => !prev);
     }
   };
-
 
   const toggleMenu = () => {
     if (!headerRef.current) return;
@@ -124,7 +123,7 @@ const Header = () => {
 
         {/* CTA */}
         <Link href="/contact">
-          <div className="squircle-sm h-fill bg-primary w-fit px-2 py-2 cursor-pointer hover:bg-rose-700 transition-colors">
+          <div className="squircle-sm h-fill bg-primary w-fit cursor-pointer px-2 py-2 transition-colors hover:bg-rose-700">
             <p className="text-primary-foreground text-[12px] font-medium tracking-wide">
               Contact Us
             </p>
@@ -139,25 +138,35 @@ const Header = () => {
         >
           <div className="flex-1">
             <div className="flex flex-col gap-3">
-              {menuItems.products.filter(item => item.label !== "E-Rates").map((item, index) => (
-                <a
-                  key={index}
-                  href={item.href}
-                  className="text-muted-light hover:text-accent flex items-center gap-2 text-lg font-extralight tracking-tight transition-colors"
-                >
-                  {item.label}
-                </a>
-              ))}
+              {menuItems.products
+                .filter((item) => item.label !== "E-Rates")
+                .map((item, index) => (
+                  <a
+                    key={index}
+                    href={item.href}
+                    className="text-muted-light hover:text-accent flex items-center gap-2 text-lg font-extralight tracking-tight transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                ))}
               <div
-                className={`group relative${isDropdownOpen ? ' open' : ''}`}
-                onMouseEnter={() => { if (!isMobile) setIsDropdownOpen(true); }}
-                onMouseLeave={() => { if (!isMobile) setIsDropdownOpen(false); }}
+                className={`group relative${isDropdownOpen ? "open" : ""}`}
+                onMouseEnter={() => {
+                  if (!isMobile) setIsDropdownOpen(true);
+                }}
+                onMouseLeave={() => {
+                  if (!isMobile) setIsDropdownOpen(false);
+                }}
                 tabIndex={0}
-                onFocus={() => { if (!isMobile) setIsDropdownOpen(true); }}
-                onBlur={() => { if (!isMobile) setIsDropdownOpen(false); }}
+                onFocus={() => {
+                  if (!isMobile) setIsDropdownOpen(true);
+                }}
+                onBlur={() => {
+                  if (!isMobile) setIsDropdownOpen(false);
+                }}
               >
                 <div
-                  className="flex items-center gap-2 text-lg font-extralight tracking-tight cursor-pointer select-none"
+                  className="text-muted-light hover:text-accent flex cursor-pointer items-center gap-2 text-lg font-extralight tracking-tight transition-colors select-none"
                   onClick={handleDropdownToggle}
                   tabIndex={0}
                   role="button"
@@ -165,39 +174,42 @@ const Header = () => {
                 >
                   OUR PRODUCTS
                   <svg
-                    className={`w-4 h-4 ml-1 transition-transform ${isDropdownOpen ? 'rotate-180' : ''} group-hover:rotate-180`}
+                    className={`ml-1 h-4 w-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""} group-hover:rotate-180`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </div>
                 <div
-                  className={`absolute left-0 mt-2 min-w-[140px] rounded bg-neutral-900 shadow-lg transition-all z-20 border border-neutral-700
-                    ${isDropdownOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'}
-                    group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0
-                  `}
+                  className={`absolute left-0 z-20 mt-2 min-w-[140px] rounded border border-neutral-700 bg-neutral-900 shadow-lg transition-all ${isDropdownOpen ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0 md:group-hover:pointer-events-auto md:group-hover:translate-y-0 md:group-hover:opacity-100"} group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100`}
                   style={{
-                    display: (isMobile && !isDropdownOpen) ? 'none' : undefined
+                    display: isMobile && !isDropdownOpen ? "none" : undefined,
                   }}
                   tabIndex={-1}
                 >
-                  {menuItems.products.filter(item => item.label === "E-Rates").map((item, index) => (
-                    <a
-                      key={index}
-                      href={item.href}
-                      className="block px-4 py-2 text-muted-light hover:text-accent text-base font-extralight tracking-tight transition-colors whitespace-nowrap"
-                    >
-                      {item.label}
-                      {item.badge && (
-                        <span className="ml-2 rounded-full bg-rose-600 px-2 py-0.5 text-xs font-medium text-white">
-                          {item.badge}
-                        </span>
-                      )}
-                    </a>
-                  ))}
+                  {menuItems.products
+                    .filter((item) => item.label === "E-Rates")
+                    .map((item, index) => (
+                      <a
+                        key={index}
+                        href={item.href}
+                        className="text-muted-light hover:text-accent block px-4 py-2 text-base font-extralight tracking-tight whitespace-nowrap transition-colors"
+                      >
+                        {item.label}
+                        {item.badge && (
+                          <span className="ml-2 rounded-full bg-rose-600 px-2 py-0.5 text-xs font-medium text-white">
+                            {item.badge}
+                          </span>
+                        )}
+                      </a>
+                    ))}
                 </div>
               </div>
             </div>
