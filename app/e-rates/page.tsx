@@ -2,71 +2,49 @@
 
 import React, { useState, useEffect } from "react";
 import Footer from "@/components/Footer/Footer";
-import { Zap, Target, Settings } from "lucide-react";
+import {
+  Zap,
+  Target,
+  Settings,
+  MapPin,
+  TrendingUp,
+  Shield,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 import { subscriptionApi, handleApiError } from "@/lib/api";
 
-const ComingSoonPage = () => {
-  const [time, setTime] = useState(() => new Date());
+const LaunchPage = () => {
   const [email, setEmail] = useState("");
-  const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [subscribeStatus, setSubscribeStatus] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
   const [subscribeMessage, setSubscribeMessage] = useState("");
   const [isClient, setIsClient] = useState(false);
-
-  // Launch date - adjust this to your actual launch date
-  const launchDate = React.useMemo(() => new Date("2026-02-01T00:00:00"), []);
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (!isClient) return;
-    
-    const timer = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
 
-    return () => clearInterval(timer);
-  }, [isClient]);
-
-  useEffect(() => {
-    if (!isClient) return;
-    
-    const countdown = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = launchDate.getTime() - now;
-
-      if (distance < 0) {
-        clearInterval(countdown);
-        return;
-      }
-
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
-      });
-    }, 1000);
-
-    return () => clearInterval(countdown);
-  }, [launchDate, isClient]);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubscribeStatus("sending");
     setSubscribeMessage("");
-    
+
     try {
       await subscriptionApi.subscribe(email, "landing_page");
       setSubscribeStatus("success");
-      setSubscribeMessage("Thanks! We'll notify you when we launch.");
+      setSubscribeMessage("Thanks! You'll receive updates about E-Rates.");
       setEmail("");
       setTimeout(() => {
         setSubscribeStatus("idle");
@@ -81,203 +59,219 @@ const ComingSoonPage = () => {
     }
   };
 
-  // Calculate clock hand angles
-  const seconds = time.getSeconds();
-  const minutes = time.getMinutes();
-  const hours = time.getHours() % 12;
-
-  const secondAngle = (seconds * 6) - 90; // 6 degrees per second
-  const minuteAngle = (minutes * 6 + seconds * 0.1) - 90; // 6 degrees per minute
-  const hourAngle = (hours * 30 + minutes * 0.5) - 90; // 30 degrees per hour
-
   if (!isClient) {
     return null;
   }
 
   return (
     <>
-      <div className="min-h-screen w-full bg-black">
-        <div className="mx-auto max-w-5xl px-4 py-16 md:px-8 md:py-24">
-          {/* Header */}
-          <div className="mb-12 text-center md:mb-16">
-            <p className="text-muted-foreground font-mono text-sm uppercase tracking-widest">
-              Launching Soon
-            </p>
-            <h1 className="mt-3 text-4xl font-bold text-white md:text-6xl">
-              E-Rates
+      <div className="relative min-h-screen w-full overflow-hidden bg-black">
+        {/* Animated background gradient */}
+        <div
+          className="absolute inset-0 opacity-30 transition-all duration-300"
+          style={{
+            background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(244, 63, 94, 0.15), transparent 50%)`,
+          }}
+        />
+
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 md:px-8 md:py-24">
+          {/* Launch Announcement */}
+          {/* <div className="mb-8 text-center">
+            <div className="inline-flex animate-pulse items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-400 backdrop-blur-sm">
+              <Sparkles className="h-4 w-4" />
+              <span className="font-medium">NOW LIVE</span>
+              <Sparkles className="h-4 w-4" />
+            </div>
+          </div> */}
+
+          {/* Hero Section */}
+          <div className="mb-16 text-center">
+            <h1 className="mt-3 text-5xl font-bold tracking-tight text-white md:text-5xl">
+              E-Rates is
+              <span className="mt-2 block bg-gradient-to-r from-rose-400 via-rose-500 to-rose-600 bg-clip-text text-transparent">
+                Finally Here
+              </span>
             </h1>
-            <p className="text-muted-foreground mt-4 text-lg">
-              Smarter Property Rates for Everyone
+            <p className="mx-auto mt-6 max-w-3xl text-xl leading-relaxed text-neutral-400 md:text-2xl">
+              The future of property rates management has arrived. Experience
+              transparency, efficiency, and accuracy like never before.
             </p>
-          </div>
 
-          {/* Analog Clock */}
-          <div className="mb-16 flex justify-center">
-            <div className="relative">
-              <svg
-                width="280"
-                height="280"
-                viewBox="0 0 280 280"
-                className="drop-shadow-2xl"
+            {/* CTA Buttons */}
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <a
+                href="https://e-rates.akoot.tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 rounded-lg bg-rose-600 px-8 py-4 text-lg font-semibold text-white transition-all hover:scale-105 hover:bg-rose-700 hover:shadow-lg hover:shadow-rose-500/50"
               >
-                {/* Clock Face */}
-                <circle
-                  cx="140"
-                  cy="140"
-                  r="135"
-                  fill="transparent"
-                  stroke="#262626"
-                  strokeWidth="2"
-                />
-                
-                {/* Hour Markers */}
-                {[...Array(12)].map((_, i) => {
-                  const angle = (i * 30 - 90) * (Math.PI / 180);
-                  const x1 = 140 + Math.cos(angle) * 120;
-                  const y1 = 140 + Math.sin(angle) * 120;
-                  const x2 = 140 + Math.cos(angle) * 110;
-                  const y2 = 140 + Math.sin(angle) * 110;
-                  
-                  return (
-                    <line
-                      key={i}
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke="#525252"
-                      strokeWidth={i % 3 === 0 ? "3" : "2"}
-                      strokeLinecap="round"
-                    />
-                  );
-                })}
-
-                {/* Hour Hand */}
-                <line
-                  x1="140"
-                  y1="140"
-                  x2={140 + Math.cos(hourAngle * Math.PI / 180) * 60}
-                  y2={140 + Math.sin(hourAngle * Math.PI / 180) * 60}
-                  stroke="#f43f5e"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                  style={{
-                    transition: "all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)",
-                  }}
-                />
-
-                {/* Minute Hand */}
-                <line
-                  x1="140"
-                  y1="140"
-                  x2={140 + Math.cos(minuteAngle * Math.PI / 180) * 85}
-                  y2={140 + Math.sin(minuteAngle * Math.PI / 180) * 85}
-                  stroke="#a3a3a3"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  style={{
-                    transition: "all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)",
-                  }}
-                />
-
-                {/* Second Hand */}
-                <line
-                  x1="140"
-                  y1="140"
-                  x2={140 + Math.cos(secondAngle * Math.PI / 180) * 100}
-                  y2={140 + Math.sin(secondAngle * Math.PI / 180) * 100}
-                  stroke="#525252"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  style={{
-                    transition: "all 0.1s linear",
-                  }}
-                />
-
-                {/* Center Dot */}
-                <circle cx="140" cy="140" r="8" fill="#f43f5e" />
-                <circle cx="140" cy="140" r="4" fill="#000" />
-              </svg>
-
-              {/* Digital Time Display */}
-              <div className="mt-6 text-center font-mono text-2xl text-neutral-500">
-                {time.toLocaleTimeString("en-US", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                })}
-              </div>
+                Launch E-Rates
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </a>
+              <a
+                href="#learn-more"
+                className="inline-flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900/50 px-8 py-4 text-lg font-semibold text-white backdrop-blur-sm transition-all hover:border-rose-600 hover:bg-neutral-900"
+              >
+                Learn More
+              </a>
             </div>
           </div>
 
-          {/* Countdown Timer */}
-          <div className="mb-12">
-            <h2 className="mb-8 text-center text-xl font-semibold text-white">
-              Launching In
+          {/* Interactive Feature Showcase */}
+          <div id="learn-more" className="mb-16">
+            <h2 className="mb-12 text-center text-3xl font-bold text-white">
+              Why E-Rates Changes Everything
             </h2>
-            <div className="grid grid-cols-4 gap-4 text-center">
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
-                { label: "Days", value: timeLeft.days },
-                { label: "Hours", value: timeLeft.hours },
-                { label: "Minutes", value: timeLeft.minutes },
-                { label: "Seconds", value: timeLeft.seconds },
-              ].map((item) => (
+                {
+                  icon: MapPin,
+                  title: "Geospatial Precision",
+                  description:
+                    "Every property mapped with pinpoint accuracy using advanced GIS technology",
+                },
+                {
+                  icon: Zap,
+                  title: "Lightning Fast",
+                  description:
+                    "Real-time calculations and instant updates. No more waiting, no more delays",
+                },
+                {
+                  icon: TrendingUp,
+                  title: "Revenue Boost",
+                  description:
+                    "Reduce leakages and increase collection efficiency by up to 40%",
+                },
+                {
+                  icon: Shield,
+                  title: "Transparent & Fair",
+                  description:
+                    "Clear valuation methods and audit trails. Trust built into every transaction",
+                },
+                {
+                  icon: Target,
+                  title: "Precision Engineered",
+                  description:
+                    "Advanced algorithms ensure accurate assessments every single time",
+                },
+                {
+                  icon: Settings,
+                  title: "Fully Customizable",
+                  description:
+                    "Adapts to your municipality's unique requirements and workflows",
+                },
+              ].map((feature, index) => (
                 <div
-                  key={item.label}
-                  className="rounded-lg border border-neutral-800 bg-neutral-950 p-4 md:p-6"
+                  key={index}
+                  className="group rounded-xl border border-neutral-800 bg-gradient-to-br from-neutral-950 to-neutral-900 p-6 transition-all hover:-translate-y-1 hover:border-rose-500/50 hover:shadow-lg hover:shadow-rose-500/10"
                 >
-                  <div className="text-3xl font-bold text-rose-500 md:text-4xl">
-                    {item.value.toString().padStart(2, "0")}
+                  <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-rose-500/10 transition-transform group-hover:scale-110">
+                    <feature.icon className="h-6 w-6 text-rose-500" />
                   </div>
-                  <div className="mt-2 font-mono text-xs uppercase tracking-wider text-neutral-500">
-                    {item.label}
-                  </div>
+                  <h3 className="mb-3 text-xl font-bold text-white">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-neutral-400">
+                    {feature.description}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Description */}
-          <div className="mx-auto mb-12 max-w-2xl text-center">
-            <h3 className="mb-4 text-2xl font-bold text-white">
-              What is E-Rates?
-            </h3>
-            <p className="text-muted-foreground mb-4 leading-relaxed">
-             e-Rates is a geospatial digital system that modernizes how government property rates are managed and collected. By linking property records to accurate maps and real-time data, it makes rates transparent, fair, and easy to manage. For government, it improves valuation accuracy, boosts revenue collection, and reduces leakages. For citizens, it simplifies billing, payments, and inquiries cutting delays, confusion, and unnecessary trips to offices. The result is a more efficient, accountable, and people-friendly rates system.
-            </p>
-            <div className="mt-8 grid gap-4 text-left md:grid-cols-3">
-              <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-4">
-                <Zap className="mb-2 h-6 w-6 text-rose-500" />
-                <h4 className="mb-2 font-semibold text-white">Lightning Fast</h4>
-                <p className="text-muted-foreground text-sm">
-                  Instant calculations with real-time updates
-                </p>
-              </div>
-              <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-4">
-                <Target className="mb-2 h-6 w-6 text-rose-500" />
-                <h4 className="mb-2 font-semibold text-white">Accurate</h4>
-                <p className="text-muted-foreground text-sm">
-                  Precision-engineered algorithms for reliable results
-                </p>
-              </div>
-              <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-4">
-                <Settings className="mb-2 h-6 w-6 text-rose-500" />
-                <h4 className="mb-2 font-semibold text-white">Customizable</h4>
-                <p className="text-muted-foreground text-sm">
-                  Tailored to your specific business needs
-                </p>
+          {/* The Journey Section */}
+          <div className="mb-16 rounded-2xl border border-neutral-800 bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 p-8 md:p-12">
+            <h2 className="mb-6 text-center text-3xl font-bold text-white">
+              From Vision to Reality
+            </h2>
+            <div className="mx-auto max-w-3xl">
+              <p className="mb-6 text-lg leading-relaxed text-neutral-300">
+                E-Rates is a geospatial digital system that modernizes how
+                government property rates are managed and collected. By linking
+                property records to accurate maps and real-time data, we've
+                created a system that's transparent, fair, and incredibly
+                efficient.
+              </p>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="rounded-lg border border-neutral-800 bg-black/50 p-6">
+                  <h4 className="mb-3 text-lg font-semibold text-rose-400">
+                    For Government
+                  </h4>
+                  <ul className="space-y-2 text-sm text-neutral-400">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 text-rose-500">•</span>
+                      <span>Improved valuation accuracy</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 text-rose-500">•</span>
+                      <span>Boosted revenue collection</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 text-rose-500">•</span>
+                      <span>Reduced leakages and fraud</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 text-rose-500">•</span>
+                      <span>Better resource allocation</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="rounded-lg border border-neutral-800 bg-black/50 p-6">
+                  <h4 className="mb-3 text-lg font-semibold text-rose-400">
+                    For Citizens
+                  </h4>
+                  <ul className="space-y-2 text-sm text-neutral-400">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 text-rose-500">•</span>
+                      <span>Simplified billing and payments</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 text-rose-500">•</span>
+                      <span>Easy inquiries and tracking</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 text-rose-500">•</span>
+                      <span>No unnecessary office visits</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-1 text-rose-500">•</span>
+                      <span>Clear, transparent processes</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Notify Me Form */}
-          <div className="mx-auto max-w-md">
-            <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-8">
+          {/* CTA Section */}
+          {/* <div className="mb-12 rounded-2xl border border-rose-500/30 bg-gradient-to-br from-rose-950/30 via-black to-rose-950/20 p-8 text-center backdrop-blur-sm md:p-12">
+            <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+              Ready to Transform Your Rates System?
+            </h2>
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-neutral-300">
+              Join the revolution in property rates management. See E-Rates in
+              action today.
+            </p>
+            <a
+              href="https://e-rates.akoot.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-3 rounded-lg bg-rose-600 px-10 py-5 text-xl font-bold text-white transition-all hover:scale-105 hover:bg-rose-700 hover:shadow-2xl hover:shadow-rose-500/50"
+            >
+              Get Started Now
+              <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-2" />
+            </a>
+          </div> */}
+
+          {/* Newsletter Section */}
+          <div className="mx-auto mb-12 max-w-md">
+            <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-8">
               <h3 className="mb-4 text-center text-xl font-bold text-white">
-                Get Notified at Launch
+                Stay Updated
               </h3>
-              <p className="text-muted-foreground mb-6 text-center text-sm">
-                Be the first to know when E-Rates goes live
+              <p className="mb-6 text-center text-sm text-neutral-400">
+                Get the latest updates, features, and insights about E-Rates
               </p>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
@@ -286,14 +280,16 @@ const ComingSoonPage = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full rounded-lg border border-neutral-800 bg-black px-4 py-3 text-white placeholder-neutral-500 transition-colors focus:border-rose-600 focus:outline-none focus:ring-1 focus:ring-rose-600"
+                  className="w-full rounded-lg border border-neutral-800 bg-black px-4 py-3 text-white placeholder-neutral-500 transition-colors focus:border-rose-600 focus:ring-1 focus:ring-rose-600 focus:outline-none"
                 />
                 <button
                   type="submit"
                   className="w-full rounded-lg bg-rose-600 px-6 py-3 font-medium text-white transition-colors hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={subscribeStatus === "sending"}
                 >
-                  {subscribeStatus === "sending" ? "Subscribing..." : "Notify Me"}
+                  {subscribeStatus === "sending"
+                    ? "Subscribing..."
+                    : "Subscribe for Updates"}
                 </button>
                 {subscribeStatus === "success" && subscribeMessage && (
                   <div className="rounded-lg border border-green-800 bg-green-950/50 px-4 py-3 text-center text-sm text-green-400">
@@ -309,13 +305,14 @@ const ComingSoonPage = () => {
             </div>
           </div>
 
-          {/* Follow Progress */}
-          <div className="mt-16 border-t border-neutral-800 pt-12 text-center">
+          {/* Blog Link */}
+          <div className="border-t border-neutral-800 pt-12 text-center">
             <h3 className="mb-4 text-xl font-bold text-white">
-              Follow Our Progress
+              Follow Our Journey
             </h3>
-            <p className="text-muted-foreground mb-6">
-              Want to see what we&apos;re building? Check out our blog for updates
+            <p className="mb-6 text-neutral-400">
+              Read about our development process, feature updates, and the
+              future of E-Rates
             </p>
             <a
               href="/blog"
@@ -331,4 +328,4 @@ const ComingSoonPage = () => {
   );
 };
 
-export default ComingSoonPage;
+export default LaunchPage;

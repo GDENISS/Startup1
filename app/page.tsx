@@ -2,18 +2,28 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Akoot.tech | Building Digital Platforms That Solve Real Problems",
-  description: "Akoot.tech crafts intuitive digital platforms including web applications, mobile solutions, GIS systems, and custom software for startups, businesses, and government agencies in Kenya and beyond.",
+  description:
+    "Akoot.tech crafts intuitive digital platforms including web applications, mobile solutions, GIS systems, and custom software for startups, businesses, and government agencies in Kenya and beyond.",
   openGraph: {
     title: "Akoot.tech | Building Digital Platforms That Solve Real Problems",
-    description: "Crafting intuitive digital platforms for everyday problems. Smart systems for real challenges.",
+    description:
+      "Crafting intuitive digital platforms for everyday problems. Smart systems for real challenges.",
     url: "https://akoot.tech",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Akoot.tech - Building Digital Platforms" }],
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Akoot.tech - Building Digital Platforms",
+      },
+    ],
   },
 };
 
 import Hero from "@/components/Hero/Hero";
 import Stack from "@/components/Stack/Stack";
 import Footer from "@/components/Footer/Footer";
+import AboutVideo from "@/components/AboutVideo/AboutVideo";
 import Image from "next/image";
 
 export default function Home() {
@@ -43,6 +53,8 @@ export default function Home() {
 
         <div className="relative z-10 hidden md:block"></div>
       </div>
+
+      <AboutVideo />
 
       <div className="border-border min-h-40 border-t bg-black text-neutral-400">
         <div className="mx-auto max-w-7xl px-0 py-8 md:px-6">
